@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+$(document).ready(function(){
+    $("#Submit").click(function(){
+        var myobj = {Name:$("#Name").val(),Comment:$("#Comment").val()};
+        var jobj = JSON.stringify(myobj);
+        console.log(jobj);
+        var url = "http://52.10.18.104/comment";
+//        $.post(url,jobj,function(data,textStatus) {
+//          console.log(textStatus);
+//        });
+        jQuery.ajax ({
+            url: url,
+            type: "POST",
+            data: jobj,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(){
+              $("#done").append("Success");
+            }
+        });
+    });
+    $("#Show").click(function(){
+      var url = "http://52.10.18.104/comment";
+      $.getJSON(url,function(data) {
+        var everything;
+        everything = "<ul>";
+        $.each(data, function(i,item) {
+          everything += "<li> Name: "+data[i].Name+"</li><ul><li> Comment: "+data[i].Comment+"</li></ul>";
+        });
+        everything += "</ul>";
+        $("#currentComments").html(everything);
+      });
+    });
+});
+
+</script>
+</head>
+<body>
+
+<form id="commentForm" action="">
+  Name: <input type="text" id="Name" value="Mickey"><br>
+  comment: <input type="text" id="Comment" value="Hello"><br>
+</form>
+
+<!--button>Serialize form values</button> --!>
+<button id="Submit">Submit Comment</button>
+<button id="Show">Show Comments</button>
+
+<div id="json"></div>
+<div id="done"></div>
+Current Comments: <span id="currentComments">Empty</span>
+
+</body>
+</html>
+
